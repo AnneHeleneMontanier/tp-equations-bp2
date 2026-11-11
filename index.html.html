@@ -1,0 +1,328 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BP2 Peintre et Electricien - TP : Des équations pour résoudre des problèmes</title><style>
+:root{font-family:system-ui,Arial,sans-serif;color:#17334a;background:#eef3f7}*{box-sizing:border-box}body{margin:0}header{background:#164c70;color:white;padding:22px max(18px,calc((100% - 1050px)/2))}h1{margin:0;font-size:1.8rem}header p{margin:6px 0 0}main{max-width:1050px;margin:20px auto;padding:0 14px}.panel{background:white;border-radius:15px;padding:20px;margin-bottom:16px;box-shadow:0 3px 14px #153a5513}.flex{display:flex;gap:10px;flex-wrap:wrap;align-items:center}button,select,input{font:inherit;padding:10px 12px;border:1px solid #b6c9d6;border-radius:9px;background:white;color:#17334a}button,select{cursor:pointer}button:hover{background:#e8f3fa}button.primary{background:#17618a;color:white;border-color:#17618a}button:disabled{opacity:.5;cursor:not-allowed}label{font-weight:650}.equation{text-align:center;font-size:clamp(1.65rem,5vw,2.65rem);font-weight:750;margin:12px}.balance{position:relative;height:245px;overflow:hidden}.beam{position:absolute;top:69px;left:13%;width:74%;height:9px;background:#52798c;border-radius:6px}.stem{position:absolute;top:70px;left:calc(50% - 5px);width:10px;height:137px;background:#52798c}.base{position:absolute;bottom:25px;left:calc(50% - 70px);width:140px;height:12px;background:#52798c;border-radius:10px}.pan{position:absolute;top:75px;width:39%;height:127px;border-bottom:9px solid #407a9c;border-left:3px solid #9db9c9;border-right:3px solid #9db9c9;border-radius:0 0 20px 20px;display:flex;align-items:end;justify-content:center;gap:4px;padding:9px 3px;flex-wrap:wrap;align-content:end}.pan.left{left:2%}.pan.right{right:2%}.tile{background:#dceefa;border:2px solid #38799f;padding:7px 9px;border-radius:8px;font-weight:700;min-width:34px;text-align:center}.tile.x{background:#ffe8b4;border-color:#bc8128}.tile.neg{background:#f9d7db;border-color:#b84f61}.feedback{padding:12px;background:#e9f3f8;border-radius:9px;min-height:44px}.write-step{margin:12px 0;padding:13px;background:#f3f8fc;border-radius:10px}.write-step input{width:80px;text-align:center;border:2px solid #9ab7c9}.write-step input.correct{border-color:#18804e;background:#e7f7ed}.write-step input.wrong{border-color:#bf5b48;background:#fff0ec}.small{font-size:.9rem;color:#526b7d}.muted{color:#526b7d}.success{color:#147448;font-weight:750}.tag{font-size:.82rem;background:#e7f3fb;padding:5px 9px;border-radius:20px}.stepEq{font-size:1.13rem;font-weight:650;margin:8px 0}.equation-column{display:flex;flex-direction:column;align-items:center;gap:10px;margin:16px auto;max-width:510px}.equation-line{display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:8px;align-items:center;width:100%;font-size:1.22rem;font-weight:700}.equation-line .left-expr{text-align:right}.equation-line .right-expr{text-align:left}.equation-line input{width:100%;min-width:0;max-width:190px;font-size:1.05rem}.equation-line .left-expr input{margin-left:auto}.step-number{font-size:1rem;color:#17334a;text-align:center;margin:8px 0 2px;font-weight:650}.equation-line.start{padding:10px;border-bottom:1px solid #d6e3ed}.opGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}.opGrid label{display:grid;gap:6px}.opGrid button{height:45px}.pill{display:inline-block;padding:4px 9px;background:#e8f3fa;border-radius:20px}.status{font-weight:700}@media(max-width:680px){.panel{padding:15px}.opGrid{grid-template-columns:1fr}.balance{height:225px}.pan{width:43%}.pan.left{left:0}.pan.right{right:0}.tile{padding:5px;min-width:27px}}
+
+.tabs{display:flex;gap:8px;margin:16px 0}.tabs button.active{background:#17618a;color:white}.hidden{display:none!important}.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.problem-card{text-align:left;border:1px solid #c6d8e4;border-radius:12px;padding:14px;background:#fff;cursor:pointer}.problem-card.selected{border:2px solid #17618a;background:#eef7fd}.problem-card small{display:block;margin-top:5px;color:#526b7d}.choice{display:block;padding:10px;border:1px solid #d4e1e9;border-radius:8px;margin:7px 0;cursor:pointer}.choice:has(input:checked){background:#e7f3fb;border-color:#17618a}.question{margin:15px 0}.problem-feedback{margin:8px 0;font-weight:650}.good{color:#127144}.bad{color:#a73c30}.problem-actions{display:flex;gap:9px;flex-wrap:wrap}.problem-actions button{min-height:44px}.input-long{width:100%;max-width:520px}.work-status{background:#eef7fd;border-radius:9px;padding:10px}.field-label{display:block;margin:12px 0 6px}.problem-card .tag{display:inline-block;margin-top:7px}
+.tp-title{font-size:1.3rem;font-weight:700;margin:.4rem 0 0}</style></head><body><header><h1>BP2 Peintre et Electricien</h1><p class="tp-title">TP : Des équations pour résoudre des problèmes</p></header><main><section class="panel" id="profilePanel"><h2>Mon suivi</h2><div class="flex"><label>Classe <input id="studentClass" placeholder="Ex. BP2 Électricien"></label><label>Prénom <input id="studentFirst" placeholder="Prénom"></label><label>Nom <input id="studentLast" placeholder="Nom"></label><button id="saveProfile" class="primary">Enregistrer mon identité</button><button id="exportProgress">⬇ Exporter mes résultats (.json)</button></div><p class="small" id="profileStatus">Renseigne ton identité avant de commencer. Les résultats sont conservés uniquement sur cet ordinateur.</p><div id="myProgress" class="small"></div></section><nav class="tabs" aria-label="Parties de l'application"><button id="tabBalance" class="active" type="button">⚖️ Partie n°1 : Apprendre à résoudre des équations avec la balance interactive</button><button id="tabProblems" type="button">🛠️ Partie 2 : Résoudre des problèmes issus de la vie professionnelle</button></nav><div id="balanceView">
+<section class="panel"><div class="flex"><label for="level">Niveau</label><select id="level"><option value="1">1 – Je découvre</option><option value="2">2 – Je progresse</option><option value="3">3 – Défi : ax + b = cx + d</option></select><button id="next">Nouvel exercice ↻</button><span id="counter" class="tag"></span></div><p class="muted">Objectif : obtenir <b>x = nombre</b>. Les deux plateaux doivent rester égaux.</p></section>
+<section class="panel"><div class="equation" id="equation"></div><div class="balance" role="img" aria-label="Balance symbolique avec un plateau gauche et un plateau droit"><div class="beam"></div><div class="stem"></div><div class="base"></div><div class="pan left" id="left"></div><div class="pan right" id="right"></div></div><p class="muted" style="text-align:center">Plateau gauche = Plateau droit</p></section>
+<section class="panel"><h2>1. Je choisis une opération</h2><p class="muted">Je peux enlever ou ajouter <b>un nombre</b> ou <b>un terme en x</b> des deux côtés.</p><div class="opGrid"><label>Action<select id="op"><option value="sub">− Enlever</option><option value="add">+ Ajouter</option><option value="div">÷ Diviser</option><option value="mul">× Multiplier</option></select></label><label>Ce que je change<select id="kind"><option value="num">Un nombre</option><option value="x">Un terme en x</option></select></label><label>Combien ?<select id="amount"></select></label></div><p id="preview" class="small"></p><div class="flex"><button class="primary" id="apply">Appliquer aux deux côtés</button><button id="undo">↶ Annuler</button><button id="reset">Recommencer</button><button id="hint">💡 Indice</button></div><p class="feedback" id="feedback" aria-live="polite"></p></section>
+<section class="panel"><h2>2. J'écris les étapes</h2><p class="muted">À chaque opération, une nouvelle étape apparaît. Je complète l’équation sous la consigne.</p><div id="writing"></div><p id="result" class="status" aria-live="polite"></p></section>
+<section class="panel"><h2>Les mots utiles</h2><p><b>+</b> ajouter · <b>−</b> enlever · <b>×</b> multiplier · <b>÷</b> diviser · <b>x</b> inconnue · <b>=</b> égal</p><p class="small">Application autonome : aucune connexion Internet nécessaire. Les réponses restent sur cet ordinateur pendant la séance.</p></section></div><div id="problemsView" class="hidden"><section class="panel"><h2>Problèmes professionnels – BP Électricien et Peintre</h2><p class="muted">10 nouvelles situations professionnelles : je trouve l'inconnue, je mets en équation, je résous et je conclus.</p><div class="flex"><label for="filterTrade">Métier</label><select id="filterTrade"><option value="all">Tous les métiers</option><option value="Électricité">Électricité</option><option value="Peinture">Peinture</option></select><label for="filterDifficulty">Niveau</label><select id="filterDifficulty"><option value="all">Tous les niveaux</option><option value="1">1 – Découvrir</option><option value="2">2 – Progresser</option><option value="3">3 – Défi</option></select></div><div id="problemList" class="problem-grid" style="margin-top:15px"></div></section><section id="problemWorkspace" class="panel"><h2 id="problemTitle"></h2><p id="problemText" style="line-height:1.65;white-space:pre-line"></p><div class="question"><label class="field-label" for="unknown">1. Que représente x ?</label><select id="unknown" class="input-long"></select><p id="unknownFeedback" class="problem-feedback" aria-live="polite"></p></div><div class="question"><strong>2. Quelle équation traduit le problème ?</strong><div id="choices"></div><div class="problem-actions"><button id="checkModel" class="primary">Vérifier la mise en équation</button><button id="sendBalance" disabled>Résoudre avec la balance →</button></div><p id="modelFeedback" class="problem-feedback" aria-live="polite"></p></div><div class="question"><label class="field-label" for="solution">3. Quelle est la valeur de x ?</label><input id="solution" inputmode="decimal" placeholder="Ex. : 7"><button id="checkSolution">Vérifier la solution</button><p id="solutionFeedback" class="problem-feedback" aria-live="polite"></p></div><div class="question"><label class="field-label" for="conclusion">4. Je conclus (avec l'unité)</label><input id="conclusion" class="input-long" placeholder="Je rédige une phrase réponse."><p class="small" id="conclusionHelp"></p><button id="validateConclusion">Valider ma conclusion</button><p class="problem-feedback" id="conclusionFeedback"></p></div><div class="problem-actions"><button id="nextProblem">Situation suivante →</button></div></section></div></main>
+<script>
+'use strict';
+const levels={
+1:[[1,3,0,7],[1,-4,0,5],[2,0,0,12],[1,5,0,11]],
+2:[[2,3,0,11],[3,-2,0,10],[4,5,0,17],[2,-4,0,8],[3,6,0,18]],
+3:[[3,5,1,13],[2,-5,1,7],[3,-4,1,8],[4,-3,2,9],[2,7,1,12],[5,2,2,14],[2,-7,-1,5],[3,6,1,-2]]
+};
+let level=1,idx=0,initial,state,history=[],professionalMode=false;
+const $=id=>document.getElementById(id);
+const fmt=n=>String(Math.round(n*10000)/10000).replace('.',',').replace('-', '−');
+const near=(a,b)=>Math.abs(a-b)<1e-8;
+function term(a,b){let v=near(a,0)?'':near(a,1)?'x':near(a,-1)?'−x':fmt(a)+'x';if(!near(b,0))v+=v?(b>0?' + ':' − ')+fmt(Math.abs(b)):fmt(b);return v||'0'}
+function eq(s){return term(s.a,s.b)+' = '+term(s.c,s.d)}
+function solved(s){return near(s.a,1)&&near(s.c,0)&&near(s.b,0)}
+function tile(container,label,klass){let e=document.createElement('span');e.className='tile '+klass;e.textContent=label;container.appendChild(e)}
+function tiles(id,a,b){let e=$(id);e.replaceChildren();if(Number.isInteger(a)&&Math.abs(a)<=5){for(let i=0;i<Math.abs(a);i++)tile(e,a<0?'−x':'x','x'+(a<0?' neg':''))}else if(!near(a,0))tile(e,term(a,0),'x');if(Number.isInteger(b)&&Math.abs(b)<=10){for(let i=0;i<Math.abs(b);i++)tile(e,b<0?'−1':'1',b<0?'neg':'')}else if(!near(b,0))tile(e,fmt(b),b<0?'neg':'');if(near(a,0)&&near(b,0))tile(e,'0','')}
+function describe(op,kind,n){const value=kind==='x'?(n===1?'x':fmt(n)+'x'):fmt(n);return ({sub:'J’enlève ',add:'J’ajoute ',div:'Je divise par ',mul:'Je multiplie par '})[op]+value+' des deux côtés.'}
+function actionText(op,kind,n){let v=kind==='x'?(n===1?'x':fmt(n)+'x'):fmt(n);return (op==='sub'?'− ':op==='add'?'+ ':op==='div'?'÷ ':'× ')+v}
+function render(){ if(professionalMode&&solved(state)){const w=getWork(problems[selectedProblem].id);w.balanceSolved=true;trackSave()} $('equation').textContent=eq(state);tiles('left',state.a,state.b);tiles('right',state.c,state.d);$('counter').textContent=professionalMode?'Situation professionnelle '+problems[selectedProblem].id:`Exercice ${idx%levels[level].length+1} / ${levels[level].length}`;$('apply').disabled=solved(state);$('undo').disabled=!history.length;$('result').innerHTML=solved(state)?'<span class="success">✓ Bravo ! x = '+fmt(state.d)+'</span>':'Je cherche une équation de la forme x = nombre.';renderWriting();preview()}
+function preview(){const op=$('op').value,kind=$('kind').value,n=Number($('amount').value);$('kind').disabled=op==='div'||op==='mul';$('preview').textContent='Mon choix : '+describe(op,op==='div'||op==='mul'?'num':kind,n)}
+function fresh(){professionalMode=false;const p=levels[level][idx%levels[level].length];initial={a:p[0],b:p[1],c:p[2],d:p[3]};state={...initial};history=[];$('feedback').textContent='Choisis une opération, puis applique-la aux deux côtés.';render()}
+function apply(){if(solved(state))return;const op=$('op').value,kind=(op==='div'||op==='mul')?'num':$('kind').value,n=Number($('amount').value);const before={...state},s={...state};if(op==='sub'){if(kind==='x'){s.a-=n;s.c-=n}else{s.b-=n;s.d-=n}}else if(op==='add'){if(kind==='x'){s.a+=n;s.c+=n}else{s.b+=n;s.d+=n}}else if(op==='div'){s.a/=n;s.b/=n;s.c/=n;s.d/=n}else{s.a*=n;s.b*=n;s.c*=n;s.d*=n}if(!Object.values(s).every(Number.isFinite))return;history.push({before,after:{...s},op,kind,n,answers:['','']});state=s;$('feedback').textContent=describe(op,kind,n);render()}
+function hint(){let s=state,msg;if(!near(s.c,0))msg=(s.c>0?'Enlève ':'Ajoute ')+fmt(Math.abs(s.c))+'x des deux côtés.';else if(!near(s.b,0))msg=(s.b>0?'Enlève ':'Ajoute ')+fmt(Math.abs(s.b))+' des deux côtés.';else if(!near(s.a,1))msg= s.a>0?'Divise par '+fmt(s.a)+' des deux côtés.':'Cherche une opération pour obtenir un seul x.';else msg='Tu as trouvé x !';$('feedback').textContent='💡 '+msg}
+function check(inp,expected){const v=inp.value.trim().replaceAll('−','-').replace(',','.').replaceAll(' ','');const expectedNorm=expected.replaceAll('−','-').replace(',','.').replaceAll(' ','');inp.classList.remove('correct','wrong');if(!v)return;let ok=v===expectedNorm;if(!ok&&expectedNorm.endsWith('x')&&v.endsWith('x'))ok=Number(v.slice(0,-1))===Number(expectedNorm.slice(0,-1));if(!ok&&!expectedNorm.endsWith('x'))ok=Number(v)===Number(expectedNorm);inp.classList.add(ok?'correct':'wrong')}
+function normalizeExpr(value){return value.trim().toLowerCase().replaceAll(' ','').replaceAll('−','-').replaceAll(',','.').replaceAll('×','*').replaceAll('0x','0').replaceAll('1x','x').replaceAll('+0','').replaceAll('-0','')}
+function renderWriting(){
+ const root=$('writing');root.replaceChildren();
+ const column=document.createElement('div');column.className='equation-column';
+ const start=document.createElement('div');start.className='equation-line start';
+ const left=document.createElement('span');left.className='left-expr';left.textContent=term(initial.a,initial.b);
+ const equal=document.createElement('span');equal.textContent='=';equal.style.textAlign='center';
+ const right=document.createElement('span');right.className='right-expr';right.textContent=term(initial.c,initial.d);
+ start.append(left,equal,right);column.appendChild(start);
+ if(!history.length){const msg=document.createElement('p');msg.className='small';msg.textContent='Choisis une opération pour afficher la prochaine ligne à compléter.';column.appendChild(msg)}
+ history.forEach((r,i)=>{
+  if(!r.answers)r.answers=['',''];
+  const num=document.createElement('p');num.className='step-number';num.textContent='Étape '+(i+1)+' : '+describe(r.op,r.kind,r.n).replace('J’enlève','j’enlève').replace('J’ajoute','j’ajoute').replace('Je divise','je divise').replace('Je multiplie','je multiplie').replace(' des deux côtés.',' de chaque côté.');column.appendChild(num);
+  const line=document.createElement('div');line.className='equation-line';
+  const expected=[term(r.after.a,r.after.b),term(r.after.c,r.after.d)];
+  [0,1].forEach(j=>{
+   if(j===1){const equals=document.createElement('span');equals.textContent='=';equals.style.textAlign='center';line.appendChild(equals)}
+   const wrapper=document.createElement('span');wrapper.className=j===0?'left-expr':'right-expr';
+   const inp=document.createElement('input');inp.type='text';inp.autocomplete='off';inp.spellcheck=false;inp.placeholder='…';inp.value=r.answers[j]||'';
+   inp.setAttribute('aria-label','Étape '+(i+1)+' : membre '+(j===0?'gauche':'droit'));
+   const validate=()=>{inp.classList.remove('correct','wrong');if(!inp.value.trim())return;inp.classList.add(normalizeExpr(inp.value)===normalizeExpr(expected[j])?'correct':'wrong')};
+   inp.addEventListener('input',()=>{r.answers[j]=inp.value;validate();if(professionalMode){const w=getWork(problems[selectedProblem].id);w.writingSteps=history.map(h=>({operation:describe(h.op,h.kind,h.n),equation:eq(h.after),answers:[...(h.answers||[])]}));w.stepsCorrect=solved(state)&&history.every(h=>(h.answers||[]).every((a,k)=>normalizeExpr(a)===normalizeExpr(k===0?term(h.after.a,h.after.b):term(h.after.c,h.after.d))));trackSave()}});validate();wrapper.appendChild(inp);line.appendChild(wrapper)
+  });
+  column.appendChild(line)
+ });root.appendChild(column)
+}
+for(let n=1;n<=30;n++){let o=document.createElement('option');o.value=n;o.textContent=n;$('amount').appendChild(o)}$('amount').value='1';$('level').addEventListener('change',e=>{level=Number(e.target.value);idx=0;fresh()});$('next').addEventListener('click',()=>{idx++;fresh()});$('reset').addEventListener('click',()=>{if(professionalMode){state={...initial};history=[];render();$('feedback').textContent='Je recommence la résolution de cette situation.'}else fresh()});$('undo').addEventListener('click',()=>{if(!history.length)return;let last=history.pop();state={...last.before};$('feedback').textContent='Dernière opération annulée.';render()});$('apply').addEventListener('click',apply);$('hint').addEventListener('click',hint);['op','kind','amount'].forEach(id=>$(id).addEventListener('change',preview));fresh();
+
+const problems=[
+ {
+  "id": 1,
+  "trade": "Électricité",
+  "difficulty": 1,
+  "title": "Installation de réglettes LED",
+  "text": "Un électricien installe plusieurs réglettes LED identiques de 18 W. La puissance totale des réglettes est de 162 W.\nCombien de réglettes installe-t-il ?",
+  "unknown": "Le nombre de réglettes",
+  "choices": [
+   "18 + x = 162",
+   "18x = 162",
+   "162x = 18"
+  ],
+  "answer": 1,
+  "coeff": [
+   18,
+   0,
+   0,
+   162
+  ],
+  "solution": 9,
+  "unit": "réglettes",
+  "conclusion": "L’électricien installe 9 réglettes LED."
+ },
+ {
+  "id": 2,
+  "trade": "Peinture",
+  "difficulty": 1,
+  "title": "Achat de rouleaux",
+  "text": "Un peintre achète plusieurs rouleaux à 9 € chacun. Il bénéficie d’une remise globale de 12 €. Il paie finalement 60 €.\nCombien de rouleaux a-t-il achetés ?",
+  "unknown": "Le nombre de rouleaux",
+  "choices": [
+   "9x + 12 = 60",
+   "12x − 9 = 60",
+   "9x − 12 = 60"
+  ],
+  "answer": 2,
+  "coeff": [
+   9,
+   -12,
+   0,
+   60
+  ],
+  "solution": 8,
+  "unit": "rouleaux",
+  "conclusion": "Le peintre a acheté 8 rouleaux."
+ },
+ {
+  "id": 3,
+  "trade": "Électricité",
+  "difficulty": 1,
+  "title": "Stock de bornes de connexion",
+  "text": "Un électricien dispose de plusieurs sachets contenant chacun 8 bornes de connexion. Il utilise 15 bornes et il lui en reste 49.\nCombien de sachets avait-il au départ ?",
+  "unknown": "Le nombre de sachets au départ",
+  "choices": [
+   "8x − 15 = 49",
+   "8x + 15 = 49",
+   "15x − 8 = 49"
+  ],
+  "answer": 0,
+  "coeff": [
+   8,
+   -15,
+   0,
+   49
+  ],
+  "solution": 8,
+  "unit": "sachets",
+  "conclusion": "L’électricien avait 8 sachets au départ."
+ },
+ {
+  "id": 4,
+  "trade": "Peinture",
+  "difficulty": 2,
+  "title": "Préparation des murs",
+  "text": "Un peintre passe 35 minutes à protéger le mobilier. Il consacre ensuite 25 minutes à préparer chaque mur. Le travail dure 160 minutes au total.\nCombien de murs a-t-il préparés ?",
+  "unknown": "Le nombre de murs préparés",
+  "choices": [
+   "35x + 25 = 160",
+   "25x − 35 = 160",
+   "25x + 35 = 160"
+  ],
+  "answer": 2,
+  "coeff": [
+   25,
+   35,
+   0,
+   160
+  ],
+  "solution": 5,
+  "unit": "murs",
+  "conclusion": "Le peintre a préparé 5 murs."
+ },
+ {
+  "id": 5,
+  "trade": "Électricité",
+  "difficulty": 2,
+  "title": "Commande de prises",
+  "text": "Un électricien commande plusieurs prises à 14 € l’unité et une boîte de dérivation à 22 €. La commande coûte 120 €.\nCombien de prises a-t-il commandées ?",
+  "unknown": "Le nombre de prises",
+  "choices": [
+   "14x + 22 = 120",
+   "22x + 14 = 120",
+   "14x − 22 = 120"
+  ],
+  "answer": 0,
+  "coeff": [
+   14,
+   22,
+   0,
+   120
+  ],
+  "solution": 7,
+  "unit": "prises",
+  "conclusion": "L’électricien a commandé 7 prises."
+ },
+ {
+  "id": 6,
+  "trade": "Peinture",
+  "difficulty": 2,
+  "title": "Bande de masquage",
+  "text": "Un peintre doit poser une bande de masquage tout autour du sol d’une pièce rectangulaire. La pièce mesure 7 m de longueur et sa largeur est inconnue. Il utilise exactement 24 m de bande.\nQuelle est la largeur de la pièce ?",
+  "unknown": "La largeur de la pièce en mètres",
+  "choices": [
+   "2x + 7 = 24",
+   "2x + 14 = 24",
+   "7x + 2 = 24"
+  ],
+  "answer": 1,
+  "coeff": [
+   2,
+   14,
+   0,
+   24
+  ],
+  "solution": 5,
+  "unit": "m",
+  "conclusion": "La pièce mesure 5 m de largeur."
+ },
+ {
+  "id": 7,
+  "trade": "Électricité",
+  "difficulty": 3,
+  "title": "Deux offres de goulottes",
+  "text": "Un électricien compare deux fournisseurs pour une même référence de goulotte électrique.\nFournisseur A : 4 € par mètre et 18 € de livraison.\nFournisseur B : 6 € par mètre et 6 € de livraison.\nPour quelle longueur les deux commandes coûtent-elles le même prix ?",
+  "unknown": "La longueur de goulotte en mètres",
+  "choices": [
+   "4x + 18 = 6x + 6",
+   "4x + 6 = 6x + 18",
+   "4x − 18 = 6x + 6"
+  ],
+  "answer": 0,
+  "coeff": [
+   4,
+   18,
+   6,
+   6
+  ],
+  "solution": 6,
+  "unit": "m",
+  "conclusion": "Les deux commandes coûtent le même prix pour 6 m de goulotte."
+ },
+ {
+  "id": 8,
+  "trade": "Peinture",
+  "difficulty": 3,
+  "title": "Fournisseurs de bâches",
+  "text": "Un peintre compare deux offres de bâches de protection identiques.\nFournisseur A : 12 € par bâche et 24 € de livraison.\nFournisseur B : 15 € par bâche avec une remise globale de 6 €.\nPour combien de bâches les deux commandes coûtent-elles le même prix ?",
+  "unknown": "Le nombre de bâches",
+  "choices": [
+   "12x − 24 = 15x + 6",
+   "12x + 24 = 15x − 6",
+   "15x + 24 = 12x − 6"
+  ],
+  "answer": 1,
+  "coeff": [
+   12,
+   24,
+   15,
+   -6
+  ],
+  "solution": 10,
+  "unit": "bâches",
+  "conclusion": "Les deux commandes coûtent le même prix pour 10 bâches."
+ },
+ {
+  "id": 9,
+  "trade": "Peinture",
+  "difficulty": 3,
+  "title": "Deux équipes de préparation",
+  "text": "Deux équipes préparent des surfaces murales.\nÉquipe A : 9 m² par heure, mais 15 m² seront finalement exclus du chantier.\nÉquipe B : 6 m² par heure, avec 21 m² supplémentaires à réaliser.\nAprès combien d’heures les surfaces préparées seront-elles identiques ?",
+  "unknown": "Le nombre d’heures de travail",
+  "choices": [
+   "9x + 15 = 6x − 21",
+   "6x − 15 = 9x + 21",
+   "9x − 15 = 6x + 21"
+  ],
+  "answer": 2,
+  "coeff": [
+   9,
+   -15,
+   6,
+   21
+  ],
+  "solution": 12,
+  "unit": "h",
+  "conclusion": "Les surfaces préparées sont identiques après 12 heures."
+ },
+ {
+  "id": 10,
+  "trade": "Électricité",
+  "difficulty": 3,
+  "title": "Deux parcours de câble",
+  "text": "Un électricien compare deux parcours possibles pour alimenter une installation.\nPremier parcours : 7 tronçons de longueur x, plus 8 m pour les raccordements.\nSecond parcours : 5 tronçons de longueur x, plus 24 m pour contourner un obstacle.\nLes deux parcours doivent avoir la même longueur. Quelle est la longueur d’un tronçon ?",
+  "unknown": "La longueur d’un tronçon en mètres",
+  "choices": [
+   "7x + 8 = 5x + 24",
+   "7x − 8 = 5x + 24",
+   "7x + 24 = 5x + 8"
+  ],
+  "answer": 0,
+  "coeff": [
+   7,
+   8,
+   5,
+   24
+  ],
+  "solution": 8,
+  "unit": "m",
+  "conclusion": "Chaque tronçon mesure 8 m."
+ }
+];
+let selectedProblem=0;const work={};
+function showTab(which){$('balanceView').classList.toggle('hidden',which!=='balance');$('problemsView').classList.toggle('hidden',which!=='problems');$('tabBalance').classList.toggle('active',which==='balance');$('tabProblems').classList.toggle('active',which==='problems')}
+$('tabBalance').addEventListener('click',()=>showTab('balance'));
+$('tabProblems').addEventListener('click',()=>showTab('problems'));
+function getWork(id){return work[id]||(work[id]={unknown:'',choice:-1,solution:'',conclusion:'',modelOK:false,unknownOK:false,solutionOK:false,conclusionOK:false,modelAttempts:0,solutionAttempts:0,balanceSolved:false,stepsCorrect:false,startedAt:new Date().toISOString(),seconds:0})}
+function renderProblems(){const list=$('problemList');list.replaceChildren();const trade=$('filterTrade').value,difficulty=$('filterDifficulty').value;problems.filter(p=>(trade==='all'||p.trade===trade)&&(difficulty==='all'||String(p.difficulty)===difficulty)).forEach(p=>{const b=document.createElement('button');b.className='problem-card'+(selectedProblem===p.id-1?' selected':'');b.innerHTML='<strong>Situation '+p.id+' – '+p.title+'</strong><small>'+p.trade+' · Niveau '+p.difficulty+'</small>';b.addEventListener('click',()=>selectProblem(p.id-1));list.appendChild(b)})}
+function selectProblem(i){selectedProblem=i;const p=problems[i],w=getWork(p.id);$('problemTitle').textContent='Situation '+p.id+' – '+p.title;$('problemText').textContent=p.text;const unknown=$('unknown');unknown.replaceChildren();['Je choisis…',p.unknown,'Le montant total de la facture','Le nombre de jours de travail','La puissance d’un seul spot'].filter((v,j,a)=>a.indexOf(v)===j).forEach((v,i)=>{const o=document.createElement('option');o.value=i===0?'':v;o.textContent=v;unknown.appendChild(o)});unknown.value=w.unknown;unknown.onchange=()=>{w.unknown=unknown.value;w.unknownOK=unknown.value===p.unknown;trackSave();$('unknownFeedback').textContent=unknown.value===p.unknown?'✓ Inconnue correctement identifiée.':unknown.value?'Essaie encore.':'';$('unknownFeedback').className='problem-feedback '+(unknown.value===p.unknown?'good':'bad')};unknown.onchange();const choices=$('choices');choices.replaceChildren();p.choices.forEach((ch,j)=>{const label=document.createElement('label');label.className='choice';const radio=document.createElement('input');radio.type='radio';radio.name='problemChoice';radio.value=j;radio.checked=w.choice===j;radio.addEventListener('change',()=>{w.choice=j;w.modelOK=false;trackSave();$('sendBalance').disabled=true;$('modelFeedback').textContent='';});label.append(radio,document.createTextNode(' '+ch));choices.appendChild(label)});$('modelFeedback').textContent=w.modelOK?'✓ Équation correcte. Tu peux passer à la balance.':'';$('modelFeedback').className='problem-feedback good';$('sendBalance').disabled=!w.modelOK;$('solution').value=w.solution;$('solutionFeedback').textContent='';$('conclusion').value=w.conclusion;$('conclusionFeedback').textContent=w.conclusionOK?'✓ Conclusion enregistrée.':'';$('conclusionHelp').textContent='Pense à préciser l’unité : '+p.unit+'.';renderProblems()}
+$('filterTrade').addEventListener('change',renderProblems);$('filterDifficulty').addEventListener('change',renderProblems);
+$('checkModel').addEventListener('click',()=>{const p=problems[selectedProblem],w=getWork(p.id);w.modelAttempts=(w.modelAttempts||0)+1;w.modelOK=w.choice===p.answer;trackSave();$('modelFeedback').textContent=w.choice<0?'Choisis une équation.':w.modelOK?'✓ Bonne équation ! Tu peux maintenant la résoudre avec la balance.':'Ce n’est pas la bonne équation. Relis les données et réessaie.';$('modelFeedback').className='problem-feedback '+(w.modelOK?'good':'bad');$('sendBalance').disabled=!w.modelOK});
+$('sendBalance').addEventListener('click',()=>{const p=problems[selectedProblem],w=getWork(p.id);if(!w.modelOK)return;professionalMode=true;getWork(p.id).balanceVisits=(getWork(p.id).balanceVisits||0)+1;trackSave();initial={a:p.coeff[0],b:p.coeff[1],c:p.coeff[2],d:p.coeff[3]};state={...initial};history=[];$('counter').textContent='Situation professionnelle '+p.id;$('feedback').textContent='Situation '+p.id+' : résous cette équation, puis retourne au problème pour conclure.';showTab('balance');render();$('counter').textContent='Situation professionnelle '+p.id;window.scrollTo({top:0,behavior:'smooth'})});
+$('solution').addEventListener('input',()=>{getWork(problems[selectedProblem].id).solution=$('solution').value;trackSave()});
+$('checkSolution').addEventListener('click',()=>{const p=problems[selectedProblem],v=Number($('solution').value.trim().replace(',','.'));const ok=$('solution').value.trim()!==''&&Number.isFinite(v)&&near(v,p.solution);const w=getWork(p.id);w.solutionAttempts=(w.solutionAttempts||0)+1;w.solutionOK=ok||w.solutionOK;trackSave();$('solutionFeedback').textContent=ok?'✓ Bonne solution : x = '+fmt(p.solution)+' '+p.unit+'.':'Ce n’est pas encore la bonne valeur. Vérifie les opérations sur la balance.';$('solutionFeedback').className='problem-feedback '+(ok?'good':'bad')});
+$('conclusion').addEventListener('input',()=>{getWork(problems[selectedProblem].id).conclusion=$('conclusion').value;getWork(problems[selectedProblem].id).conclusionOK=false;trackSave()});
+$('nextProblem').addEventListener('click',()=>selectProblem((selectedProblem+1)%problems.length));
+selectProblem(0);
+
+</script><script>
+'use strict';
+const TRACK_KEY='equations_bp_tracking_v1';
+let profile={classe:'',prenom:'',nom:''};
+let activeStart=Date.now();
+function elapsed(){const w=getWork(problems[selectedProblem].id);if(w.startedAt)w.seconds=(w.seconds||0)+Math.max(0,Math.min(3600,Math.round((Date.now()-activeStart)/1000)));activeStart=Date.now()}
+function summary(){let done=0;for(const p of problems){const w=work[p.id];if(w&&w.modelOK&&w.solutionOK&&w.conclusionOK)done++}return done}
+function trackSave(){try{localStorage.setItem(TRACK_KEY,JSON.stringify({version:1,profile,work,updatedAt:new Date().toISOString()}))}catch(e){$('profileStatus').textContent='Attention : sauvegarde locale indisponible. Exporte tes résultats.'}const el=$('myProgress');if(el)el.textContent='Progression : '+summary()+'/10 situations terminées (équation, solution et conclusion validées).'}
+function restore(){try{const d=JSON.parse(localStorage.getItem(TRACK_KEY)||'null');if(d&&d.version===1){profile=d.profile||profile;Object.assign(work,d.work||{});$('studentClass').value=profile.classe||'';$('studentFirst').value=profile.prenom||'';$('studentLast').value=profile.nom||'';$('profileStatus').textContent='Suivi local chargé. Pense à exporter ton fichier en fin de séance.';selectProblem(0)}}catch(e){}trackSave()}
+$('saveProfile').onclick=()=>{profile={classe:$('studentClass').value.trim(),prenom:$('studentFirst').value.trim(),nom:$('studentLast').value.trim()};$('profileStatus').textContent=profile.classe&&profile.prenom&&profile.nom?'Identité enregistrée.':'Complète la classe, le prénom et le nom.';trackSave()};
+function downloadJSON(data,name){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('exportProgress').onclick=()=>{if(!$('studentClass').value.trim()||!$('studentFirst').value.trim()||!$('studentLast').value.trim()){alert('Renseigne et enregistre d’abord ta classe, ton prénom et ton nom.');return}profile={classe:$('studentClass').value.trim(),prenom:$('studentFirst').value.trim(),nom:$('studentLast').value.trim()};elapsed();trackSave();const slug=v=>v.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,35);downloadJSON({format:'equations-bp-progress',version:1,exportedAt:new Date().toISOString(),profile,exercises:problems.map(p=>({id:p.id,title:p.title,trade:p.trade,difficulty:p.difficulty,expectedSolution:p.solution,...(work[p.id]||{})}))},slug(profile.classe)+'_'+slug(profile.nom.toUpperCase())+'_'+slug(profile.prenom.charAt(0).toUpperCase()+profile.prenom.slice(1))+'_Equations.json')};
+$('validateConclusion').onclick=()=>{const p=problems[selectedProblem],w=getWork(p.id);const c=w.conclusion.trim().toLowerCase();const numeric=String(p.solution).replace('.',',');const ok=c.length>=15&&(c.includes(numeric)||c.includes(String(p.solution)))&&(c.includes(p.unit.toLowerCase())||((p.unit==='m')&&c.includes('mètre')));w.conclusionOK=ok;trackSave();$('conclusionFeedback').textContent=ok?'✓ Conclusion enregistrée (vérification automatique indicative).':'Ajoute une phrase complète avec la valeur et son unité.';$('conclusionFeedback').className='problem-feedback '+(ok?'good':'bad')};
+// Enregistre la durée lors des changements de situation et au départ de la page.
+const oldSelectProblem=selectProblem;selectProblem=function(i){elapsed();oldSelectProblem(i);activeStart=Date.now();trackSave()};
+window.addEventListener('pagehide',()=>{elapsed();trackSave()});
+restore();
+</script></body></html>
